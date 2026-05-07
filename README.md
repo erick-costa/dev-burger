@@ -29,14 +29,6 @@ O projeto permite:
 
 ## Como executar o projeto
 
-### Clone o repositório
-
-```bash
-git clone <url-do-repositorio>
-```
-
----
-
 ### Instale as dependências
 
 ```bash
