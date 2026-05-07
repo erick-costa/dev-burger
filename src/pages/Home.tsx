@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import { api } from "../api/api"
 import ProductCard from "../components/ProductCard"
 import ProductModal from "../components/ProductModal"
+import Header from "../components/Header"
+import CartSidebar from "../components/CartSidebar"
 
 import type { Product } from "../types/Product"
 
@@ -10,6 +12,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [isCartOpen, setIsCartOpen] = useState(false)
 
   function handleOpenModal(product: Product) {
     setSelectedProduct(product)
@@ -31,6 +34,14 @@ export default function Home() {
     }
   }
 
+  function handleOpenCart() {
+    setIsCartOpen(true)
+  }
+
+  function handleCloseCart() {
+    setIsCartOpen(false)
+  }
+
   useEffect(() => {
     fetchProducts()
   }, [])
@@ -46,11 +57,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white p-6">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-10">
-          <h1 className="text-4xl font-bold">DevBurger</h1>
-
-          <p className="text-zinc-400 mt-2">Os melhores burgers da cidade 🍔</p>
-        </header>
+        <Header onOpenCart={handleOpenCart} />
 
         <section
           className="
@@ -60,6 +67,7 @@ export default function Home() {
           lg:grid-cols-3
           xl:grid-cols-4
           gap-6
+          mt-14
         "
         >
           {products.map((product) => (
@@ -70,6 +78,8 @@ export default function Home() {
             />
           ))}
         </section>
+
+        <CartSidebar isOpen={isCartOpen} onClose={handleCloseCart} />
 
         {selectedProduct && (
           <ProductModal

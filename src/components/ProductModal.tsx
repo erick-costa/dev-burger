@@ -1,4 +1,5 @@
 import type { Product } from "../types/Product"
+import { useCart } from "../context/CartContext"
 
 interface ProductModalProps {
   product: Product
@@ -6,6 +7,13 @@ interface ProductModalProps {
 }
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
+  const { addToCart } = useCart()
+
+  function handleAddToCart() {
+    addToCart(product)
+    onClose()
+  }
+
   return (
     <div
       onClick={onClose}
@@ -78,6 +86,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             </strong>
 
             <button
+              onClick={handleAddToCart}
               className="
                 w-full
                 mt-6
