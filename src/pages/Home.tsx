@@ -7,12 +7,14 @@ import Header from "../components/Header"
 import CartSidebar from "../components/CartSidebar"
 
 import type { Product } from "../types/Product"
+import SearchBar from "../components/SearchBar"
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [search, setSearch] = useState("")
 
   function handleOpenModal(product: Product) {
     setSelectedProduct(product)
@@ -42,6 +44,10 @@ export default function Home() {
     setIsCartOpen(false)
   }
 
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase()),
+  )
+
   useEffect(() => {
     fetchProducts()
   }, [])
@@ -59,25 +65,33 @@ export default function Home() {
       <div className="max-w-7xl mx-auto">
         <Header onOpenCart={handleOpenCart} />
 
-        <section
-          className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-3
-          xl:grid-cols-4
-          gap-6
-          mt-14
-        "
-        >
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onOpenModal={handleOpenModal}
-            />
-          ))}
-        </section>
+        <SearchBar search={search} setSearch={setSearch} />
+
+        {filteredProducts.length === 0 ? (
+          <div className="text-center text-zinc-400 py-20">
+            Nenhum produto encontrado
+          </div>
+        ) : (
+          <section
+            className="
+              grid
+              grid-cols-1
+              sm:grid-cols-2
+              lg:grid-cols-3
+              xl:grid-cols-4
+              gap-6
+              mt-14
+            "
+          >
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onOpenModal={handleOpenModal}
+              />
+            ))}
+          </section>
+        )}
 
         <CartSidebar isOpen={isCartOpen} onClose={handleCloseCart} />
 
